@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pqp-primary: var(--pqp-primary);
+}
+
+:root {
+  --pqp-primary: #4f46e5;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: #fff;
+  overflow: hidden;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

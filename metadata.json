@@ -1,0 +1,7 @@
+{
+  "name": "PQP CORE Intelligence",
+  "description": "एक सुरक्षित और स्वतंत्र एआई शोध एवं उत्पादकता प्लेटफॉर्म।",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
