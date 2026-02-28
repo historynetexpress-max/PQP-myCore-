@@ -1,11 +1,11 @@
 
 const CACHE_NAME = 'pqp-v2';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/index.tsx',
-  '/App.tsx',
+  './',
+  './index.html',
+  './manifest.json',
+  './index.tsx',
+  './App.tsx',
   'https://cdn.tailwindcss.com',
   'https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+Devanagari:wght@400;700;900&display=swap',
   'https://picsum.photos/seed/pqpcore/192/192',
