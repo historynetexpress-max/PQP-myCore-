@@ -1,0 +1,46 @@
+
+{
+  "short_name": "PQP",
+  "name": "PQP Intelligence Platform",
+  "description": "एक सुरक्षित और स्वतंत्र एआई शोध ऐप।",
+  "icons": [
+    {
+      "src": "https://picsum.photos/seed/pqpcore/192/192",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "https://picsum.photos/seed/pqpcore/192/192",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "https://picsum.photos/seed/pqpcore/512/512",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    },
+    {
+      "src": "https://picsum.photos/seed/pqpcore/512/512",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display_override": ["fullscreen", "standalone"],
+  "categories": ["productivity", "education"],
+  "shortcuts": [
+    {
+      "name": "नया शोध",
+      "url": "/?view=ai",
+      "description": "सीधे एआई शोध शुरू करें"
+    }
+  ]
+}
