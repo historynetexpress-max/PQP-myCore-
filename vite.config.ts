@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-      base: '/PQP-myCore-/',
+      base: './',
       build: {
         outDir: 'docs',
         emptyOutDir: true,
