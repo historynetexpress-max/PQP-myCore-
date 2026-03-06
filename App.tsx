@@ -5,11 +5,13 @@ import {
   Zap, GraduationCap, Trophy, Brain, Send, Image as ImageIcon, 
   Monitor, Eye, Home, BookOpen, MessageSquarePlus, Cpu, Edit3, Circle, CheckCircle2, Sparkle,
   LayoutDashboard, Paperclip, Loader2, ChevronRight, Globe, Shield, Activity, Info, Download,
-  Layers, Rocket, Star
+  Layers, Rocket, Star, LogOut
 } from 'lucide-react';
 import { Task, Note, AppView, QuizQuestion, QuizResult, AIModelId, ChatMessage, ChatAttachment } from './types';
 import { getAIAssistance, generateQuiz } from './services/gemini';
 import { Logo } from './src/components/Logo';
+import { AuthProvider, useAuth } from './src/contexts/AuthContext';
+import { Auth } from './src/Auth';
 
 const THEME_COLORS = [
   { name: 'Indigo', value: '#4f46e5', light: '#eef2ff', ring: 'rgba(79, 70, 229, 0.4)' },
@@ -34,6 +36,15 @@ const EDUCATION_FORMS = [
 ];
 
 const App: React.FC = () => {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+};
+
+const MainApp: React.FC = () => {
+  const { user, loading, logout } = useAuth();
   const [view, setView] = useState<AppView>('dashboard');
   const [tasks, setTasks] = useState<Task[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -67,6 +78,24 @@ const App: React.FC = () => {
   useEffect(() => { localStorage.setItem('pqp_tasks', JSON.stringify(tasks)); }, [tasks]);
   useEffect(() => { localStorage.setItem('pqp_notes', JSON.stringify(notes)); }, [notes]);
 
+  if (loading) {
+    return (
+      <div className="h-screen w-screen bg-black flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Logo size={60} className="animate-pulse" />
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-4 h-4 animate-spin text-indigo-500" />
+            <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Authenticating...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Auth />;
+  }
+
   return (
     <div className="h-screen w-screen flex bg-black font-sans transition-all duration-500 overflow-hidden" style={{ '--pqp-primary': theme.value } as React.CSSProperties}>
       <style>{`
@@ -96,8 +125,23 @@ const App: React.FC = () => {
             <NavItem icon={<StickyNote />} label="सुरक्षित नोट्स" active={view === 'notes'} onClick={() => { setView('notes'); setIsSidebarOpen(false); }} />
           </nav>
 
-          <div className="mt-6 pt-6 border-t border-white/5 flex gap-2 justify-center">
-            {THEME_COLORS.map(c => <button key={c.name} onClick={() => setTheme(c)} className={`w-8 h-8 rounded-full transition-all ${theme.name === c.name ? 'ring-2 ring-white ring-offset-2 ring-offset-black scale-110' : 'opacity-40 hover:opacity-100'}`} style={{ backgroundColor: c.value }} />)}
+          <div className="mt-auto pt-6 border-t border-white/5 space-y-4">
+            <div className="flex items-center gap-3 px-4 py-3 bg-white/5 rounded-2xl border border-white/5">
+              <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-black text-xs">
+                {user.name?.[0] || user.email[0].toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-black text-white uppercase truncate">{user.name || 'User'}</p>
+                <p className="text-[8px] text-slate-500 truncate">{user.email}</p>
+              </div>
+              <button onClick={logout} className="p-2 text-slate-500 hover:text-rose-500 transition-colors">
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="flex gap-2 justify-center">
+              {THEME_COLORS.map(c => <button key={c.name} onClick={() => setTheme(c)} className={`w-8 h-8 rounded-full transition-all ${theme.name === c.name ? 'ring-2 ring-white ring-offset-2 ring-offset-black scale-110' : 'opacity-40 hover:opacity-100'}`} style={{ backgroundColor: c.value }} />)}
+            </div>
           </div>
         </div>
       </aside>
