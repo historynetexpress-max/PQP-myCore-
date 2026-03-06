@@ -19,15 +19,10 @@ root.render(
 // PWA Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    // Determine the base path for the service worker
-    const swPath = window.location.pathname.includes('/services/') 
-      ? '../sw.js' 
-      : './sw.js';
-      
-    navigator.serviceWorker.register(swPath).then(registration => {
-      console.log('SW registered: ', registration);
-    }).catch(registrationError => {
-      console.log('SW registration failed: ', registrationError);
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
     });
   });
 }
