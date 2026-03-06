@@ -85,13 +85,13 @@ export const getAIAssistance = async (
       contents,
       config: {
         systemInstruction: isImageRequest 
-          ? "You are a master of visual creation. Generate high-fidelity images of anything requested (people, places, world, objects)."
+          ? undefined
           : `आप PQP CORE के एक अत्यंत बुद्धिमान और मददगार सहायक हैं। ${currentPersonality} 
              उपयोगकर्ता के किसी भी सवाल का स्पष्ट जवाब दें। 
              यदि उपयोगकर्ता 'संक्षेप' में जानकारी मांगे तो केवल मुख्य बिंदु लिखें। 
              यदि उपयोगकर्ता 'विस्तार' में मांगे तो पूरी व्याख्या करें।
              जवाब के लिए हिंदी भाषा का प्रयोग करें। महत्वपूर्ण जानकारी को **बोल्ड** करें।`,
-        temperature: isImageRequest ? 1.0 : 0.7,
+        temperature: isImageRequest ? undefined : 0.7,
         tools: isImageRequest ? undefined : [{ googleSearch: {} }],
         imageConfig: isImageRequest ? { aspectRatio: detectAspectRatio(prompt) } : undefined
       }

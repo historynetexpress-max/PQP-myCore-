@@ -24,13 +24,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('pqp_current_user');
-    if (storedUser) {
-      try {
+    try {
+      const storedUser = localStorage.getItem('pqp_current_user');
+      if (storedUser) {
         setUser(JSON.parse(storedUser));
-      } catch (e) {
-        localStorage.removeItem('pqp_current_user');
       }
+    } catch (e) {
+      console.warn('localStorage is not available:', e);
     }
     setLoading(false);
   }, []);
@@ -39,16 +39,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        const users: User[] = JSON.parse(localStorage.getItem('pqp_users') || '[]');
-        const found = users.find(u => u.email === email && u.password === pass);
-        if (found) {
-          const { password, ...safeUser } = found;
-          setUser(safeUser as User);
-          localStorage.setItem('pqp_current_user', JSON.stringify(safeUser));
-          resolve();
-        } else {
-          setError('ईमेल या पासवर्ड गलत है।');
-          reject(new Error('Invalid credentials'));
+        try {
+          const users: User[] = JSON.parse(localStorage.getItem('pqp_users') || '[]');
+          const found = users.find(u => u.email === email && u.password === pass);
+          if (found) {
+            const { password, ...safeUser } = found;
+            setUser(safeUser as User);
+            localStorage.setItem('pqp_current_user', JSON.stringify(safeUser));
+            resolve();
+          } else {
+            setError('ईमेल या पासवर्ड गलत है।');
+            reject(new Error('Invalid credentials'));
+          }
+        } catch (e) {
+          setError('सिस्टम त्रुटि: ब्राउज़र स्टोरेज उपलब्ध नहीं है।');
+          reject(e);
         }
       }, 800);
     });
@@ -58,26 +63,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setError(null);
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
-        const users: User[] = JSON.parse(localStorage.getItem('pqp_users') || '[]');
-        if (users.find(u => u.email === email)) {
-          setError('यह ईमेल पहले से पंजीकृत है।');
-          reject(new Error('User exists'));
-          return;
+        try {
+          const users: User[] = JSON.parse(localStorage.getItem('pqp_users') || '[]');
+          if (users.find(u => u.email === email)) {
+            setError('यह ईमेल पहले से पंजीकृत है।');
+            reject(new Error('User exists'));
+            return;
+          }
+          const newUser: User = { id: Date.now().toString(), name, email, password: pass };
+          users.push(newUser);
+          localStorage.setItem('pqp_users', JSON.stringify(users));
+          
+          const { password, ...safeUser } = newUser;
+          setUser(safeUser as User);
+          localStorage.setItem('pqp_current_user', JSON.stringify(safeUser));
+          resolve();
+        } catch (e) {
+          setError('सिस्टम त्रुटि: ब्राउज़र स्टोरेज उपलब्ध नहीं है।');
+          reject(e);
         }
-        const newUser: User = { id: Date.now().toString(), name, email, password: pass };
-        users.push(newUser);
-        localStorage.setItem('pqp_users', JSON.stringify(users));
-        
-        const { password, ...safeUser } = newUser;
-        setUser(safeUser as User);
-        localStorage.setItem('pqp_current_user', JSON.stringify(safeUser));
-        resolve();
       }, 800);
     });
   };
 
   const logout = () => {
-    localStorage.removeItem('pqp_current_user');
+    try {
+      localStorage.removeItem('pqp_current_user');
+    } catch (e) {}
     setUser(null);
   };
 

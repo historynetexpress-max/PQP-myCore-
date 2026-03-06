@@ -69,14 +69,22 @@ const MainApp: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const savedTasks = localStorage.getItem('pqp_tasks');
-    const savedNotes = localStorage.getItem('pqp_notes');
-    if (savedTasks) setTasks(JSON.parse(savedTasks));
-    if (savedNotes) setNotes(JSON.parse(savedNotes));
+    try {
+      const savedTasks = localStorage.getItem('pqp_tasks');
+      const savedNotes = localStorage.getItem('pqp_notes');
+      if (savedTasks) setTasks(JSON.parse(savedTasks));
+      if (savedNotes) setNotes(JSON.parse(savedNotes));
+    } catch (e) {
+      console.warn('localStorage is not available:', e);
+    }
   }, []);
 
-  useEffect(() => { localStorage.setItem('pqp_tasks', JSON.stringify(tasks)); }, [tasks]);
-  useEffect(() => { localStorage.setItem('pqp_notes', JSON.stringify(notes)); }, [notes]);
+  useEffect(() => { 
+    try { localStorage.setItem('pqp_tasks', JSON.stringify(tasks)); } catch (e) {} 
+  }, [tasks]);
+  useEffect(() => { 
+    try { localStorage.setItem('pqp_notes', JSON.stringify(notes)); } catch (e) {} 
+  }, [notes]);
 
   if (loading) {
     return (

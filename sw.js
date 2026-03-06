@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'pqp-v2';
+const CACHE_NAME = 'pqp-v4-github-pages-fix';
 const ASSETS = [
   './',
   './index.html',
