@@ -8,6 +8,10 @@
       if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('.html')) {
         window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
       }
+      // Polyfill for process.env to prevent crashes from Node.js libraries
+      if (typeof window.process === 'undefined') {
+        window.process = { env: {} };
+      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>PQP SYSTEM</title>
